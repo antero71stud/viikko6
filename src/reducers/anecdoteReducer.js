@@ -9,7 +9,7 @@ const anecdotesAtStart = [
 
 const getId = () => (100000*Math.random()).toFixed(0)
 
-const asObject = (anecdote) => {
+const createAction = (anecdote) => {
   return {
     content: anecdote,
     id: getId(),
@@ -17,21 +17,16 @@ const asObject = (anecdote) => {
   }
 }
 
-const initialState = anecdotesAtStart.map(asObject)
+const initialState = anecdotesAtStart.map(createAction)
 
-const reducer = (store = initialState, action) => {
-  if (action.type==='VOTE') {
-    const old = store.filter(a => a.id !==action.id)
-    const voted = store.find(a => a.id === action.id)
-
-    return [...old, { ...voted, votes: voted.votes+1} ]
-  }
-  if (action.type === 'CREATE') {
-
-    return [...store, { content: action.content, id: getId(), votes:0 }]
-  }
-
-  return store
+export const addVoteReducer = (store = initialState, action) => {
+  const old = store.filter(a => a.id !==action.id)
+  const voted = store.find(a => a.id === action.id)
+  return [...old, { ...voted, votes: voted.votes+1 } ]
 }
 
-export default reducer
+const createReducer = (store = initialState, action) => {
+  return [...store, { content: action.content, id: getId(), votes:0 }]
+}
+
+export default createReducer
